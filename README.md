@@ -1,2 +1,2 @@
-# embargo_app
+# lacuna_app
 Send messages to your future self.
