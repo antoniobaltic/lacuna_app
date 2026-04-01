@@ -1,0 +1,43 @@
+{
+  "identifier" : "F7B3D4A2-8C1E-4F5A-9D6B-2E8A1C3F5D7B",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : true,
+      "internalID" : "A1B2C3D4-E5F6-7890-ABCD-EF1234567890",
+      "localizations" : [
+        {
+          "description" : "unlock everything. forever.",
+          "displayName" : "lacuna +",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "antoniobaltic.embargo.pro",
+      "referenceName" : "lacuna +",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "lacuna",
+    "_developerTeamID" : "7Z862J5PAH",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 733000000,
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}
