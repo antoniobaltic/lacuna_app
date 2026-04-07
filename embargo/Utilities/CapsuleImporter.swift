@@ -34,17 +34,10 @@ enum CapsuleImporter {
             return nil // Already imported
         }
 
-        // Handle audio data
-        var audioFileName: String?
-        if let audioBase64 = package.audioData, let audioData = Data(base64Encoded: audioBase64) {
-            let fileName = "\(UUID().uuidString).m4a"
-            let fileURL = AudioManager.audioFileURL(for: fileName)
-            do {
-                try audioData.write(to: fileURL)
-                audioFileName = fileName
-            } catch {
-                // Audio save failed, continue without it
-            }
+        // Handle audio data — store inline for iCloud sync
+        var audioData: Data?
+        if let audioBase64 = package.audioData {
+            audioData = Data(base64Encoded: audioBase64)
         }
 
         // Handle image data
@@ -58,7 +51,7 @@ enum CapsuleImporter {
             type: capsuleType,
             textContent: package.textContent,
             imageData: imageData,
-            audioFileName: audioFileName,
+            audioData: audioData,
             unlocksAt: unlocksAt,
             senderName: senderName
         )

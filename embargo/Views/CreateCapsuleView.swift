@@ -16,7 +16,7 @@ struct CreateCapsuleView: View {
     @State private var selectedPhoto: PhotosPickerItem?
     @State private var imageData: Data?
     @State private var audioFileName: String?
-    @State private var unlockDate = Calendar.current.date(byAdding: .day, value: 1, to: .now)!
+    @State private var unlockDate = Date.now.addingTimeInterval(86400)
     @State private var audioManager = AudioManager()
     @State private var typeTrigger = false
     @State private var stepTrigger = false
@@ -228,12 +228,19 @@ struct CreateCapsuleView: View {
     }
 
     private func sealCapsule() {
+        // Convert audio file to inline Data for iCloud sync
+        let audioData: Data? = if let audioFileName, selectedType == .voice {
+            audioManager.loadAudioData(for: audioFileName)
+        } else {
+            nil
+        }
+
         let capsule = Capsule(
             title: title,
             type: selectedType ?? .text,
             textContent: selectedType == .text ? textContent : nil,
             imageData: selectedType == .photo ? imageData : nil,
-            audioFileName: selectedType == .voice ? audioFileName : nil,
+            audioData: audioData,
             unlocksAt: unlockDate
         )
         modelContext.insert(capsule)
@@ -256,13 +263,19 @@ struct CreateCapsuleView: View {
     }
 
     private func sendCapsule(senderName: String) {
+        let audioData: Data? = if let audioFileName, selectedType == .voice {
+            audioManager.loadAudioData(for: audioFileName)
+        } else {
+            nil
+        }
+
         // Package the capsule data for export (don't insert into DB yet)
         let tempCapsule = Capsule(
             title: title,
             type: selectedType ?? .text,
             textContent: selectedType == .text ? textContent : nil,
             imageData: selectedType == .photo ? imageData : nil,
-            audioFileName: selectedType == .voice ? audioFileName : nil,
+            audioData: audioData,
             unlocksAt: unlockDate,
             isSent: true
         )
@@ -279,8 +292,8 @@ struct CreateCapsuleView: View {
     }
 
     private func presentShareSheet(url: URL) {
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let rootVC = windowScene.windows.first?.rootViewController else { return }
+        guard let windowScene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+              let rootVC = windowScene.keyWindow?.rootViewController else { return }
 
         // Find the topmost presented view controller
         var topVC = rootVC
@@ -289,10 +302,11 @@ struct CreateCapsuleView: View {
         }
 
         let shareItem = CapsuleShareItem(fileURL: url, unlockDate: unlockDate)
-        // TODO: Replace with actual App Store link after release
-        let appStoreLink = "https://apps.apple.com/app/lacuna/id6761478231"
+        let appStoreLink = "https://apps.apple.com/app/lacuna-time-capsule/id6761478231"
         let message = "i sealed a time capsule for you. download lacuna to open it: \(appStoreLink)"
         let activityVC = UIActivityViewController(activityItems: [message, shareItem], applicationActivities: nil)
+        // Exclude iMessage — custom file types can't be opened from iMessage
+        activityVC.excludedActivityTypes = [.message]
         activityVC.completionWithItemsHandler = { _, completed, _, _ in
             // Clean up temp file
             try? FileManager.default.removeItem(at: url)
@@ -307,13 +321,19 @@ struct CreateCapsuleView: View {
     }
 
     private func saveSentCapsule() {
+        let audioData: Data? = if let audioFileName, selectedType == .voice {
+            audioManager.loadAudioData(for: audioFileName)
+        } else {
+            nil
+        }
+
         // Only called after share sheet completes successfully
         let capsule = Capsule(
             title: title,
             type: selectedType ?? .text,
             textContent: selectedType == .text ? textContent : nil,
             imageData: selectedType == .photo ? imageData : nil,
-            audioFileName: selectedType == .voice ? audioFileName : nil,
+            audioData: audioData,
             unlocksAt: unlockDate,
             isSent: true
         )

@@ -309,9 +309,6 @@ struct HomeView: View {
     }
 
     private func deleteCapsule(_ capsule: Capsule) {
-        if let audioFile = capsule.audioFileName {
-            AudioManager().deleteAudioFile(named: audioFile)
-        }
         NotificationManager.cancelCapsuleNotification(id: capsule.id.uuidString)
         modelContext.delete(capsule)
         capsuleToDelete = nil

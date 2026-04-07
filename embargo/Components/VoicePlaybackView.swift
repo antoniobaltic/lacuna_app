@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct VoicePlaybackView: View {
-    let fileName: String
+    let audioData: Data?
     @State private var audioManager = AudioManager()
     @State private var playTrigger = false
 
@@ -20,8 +20,8 @@ struct VoicePlaybackView: View {
                 playTrigger.toggle()
                 if audioManager.isPlaying {
                     audioManager.stopPlayback()
-                } else {
-                    audioManager.play(fileName: fileName)
+                } else if let audioData {
+                    audioManager.playFromData(audioData)
                 }
             }
             .labelStyle(.iconOnly)

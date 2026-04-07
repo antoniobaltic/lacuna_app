@@ -1,7 +1,7 @@
 import UIKit
 import LinkPresentation
 
-final class CapsuleShareItem: NSObject, UIActivityItemSource {
+nonisolated final class CapsuleShareItem: NSObject, UIActivityItemSource {
     private let fileURL: URL
     private let unlockDate: Date
 
@@ -11,30 +11,26 @@ final class CapsuleShareItem: NSObject, UIActivityItemSource {
         super.init()
     }
 
-    func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
+    nonisolated func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
         fileURL
     }
 
-    func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
+    nonisolated func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
         fileURL
     }
 
-    func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivity.ActivityType?) -> String {
+    nonisolated func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivity.ActivityType?) -> String {
         "lacuna time capsule"
     }
 
-    func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
+    nonisolated func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
         let metadata = LPLinkMetadata()
         metadata.title = "lacuna time capsule"
-
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d, yyyy"
         metadata.originalURL = fileURL
         metadata.url = fileURL
 
-        // App icon as preview
-        if let iconImage = UIImage(named: "AppIcon") {
-            metadata.iconProvider = NSItemProvider(object: iconImage)
+        if let icon = UIImage(named: "ShareIcon") {
+            metadata.iconProvider = NSItemProvider(object: icon)
         }
 
         return metadata

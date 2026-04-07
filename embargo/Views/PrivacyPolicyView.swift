@@ -55,13 +55,15 @@ struct PrivacyPolicyView: View {
                         "Antonio Baltic\naustria\nantoniobaltic@icloud.com"
                     }
 
-                    policySection("what we store on your device") {
+                    policySection("where your data lives") {
                         """
-                        all capsule data (text, photos, voice recordings, titles, dates) is stored exclusively on your device using apple's swiftdata framework and the app's sandboxed file system.
+                        all capsule data (text, photos, voice recordings, titles, dates) is stored on your device using apple's swiftdata framework.
 
-                        your preferences (appearance mode, sender name, onboarding status) are stored locally using apple's standard userdefaults.
+                        if icloud is enabled, your capsules sync automatically across your apple devices using apple's cloudkit. this data goes to your personal icloud storage — not to any server we operate. apple encrypts it in transit and at rest.
 
-                        we have no servers, no cloud storage, no accounts, and no way to access your content.
+                        your preferences (appearance mode, sender name, onboarding status) are stored locally and are not synced.
+
+                        we have no servers, no accounts, and no way to access your content.
                         """
                     }
 
@@ -139,7 +141,7 @@ struct PrivacyPolicyView: View {
                         Divider().overlay(Design.divider)
                         summaryRow("share with third parties?", answer: "anonymous purchase data only")
                         Divider().overlay(Design.divider)
-                        summaryRow("where is data stored?", answer: "your device only")
+                        summaryRow("where is data stored?", answer: "device + your icloud")
                         Divider().overlay(Design.divider)
                         summaryRow("how to delete?", answer: "delete the app")
                     }
@@ -153,7 +155,7 @@ struct PrivacyPolicyView: View {
 
                     // Footer
                     VStack(spacing: 6) {
-                        Text("last updated: april 1, 2026")
+                        Text("last updated: april 4, 2026")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                             .tracking(Design.trackingTight)

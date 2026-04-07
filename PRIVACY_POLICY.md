@@ -2,7 +2,7 @@
 
 **Lacuna — Time Capsule App**
 
-Last updated: April 1, 2026
+Last updated: April 4, 2026
 
 Antonio Baltic ("I", "me", "my") operates the Lacuna mobile application ("the App"). This privacy policy explains how your information is handled when you use the App.
 
@@ -23,9 +23,9 @@ For the purposes of the EU General Data Protection Regulation (GDPR / DSGVO) and
 
 ## 2. What Data Is Processed
 
-### 2.1 Content You Create (Stored Locally Only)
+### 2.1 Content You Create
 
-When you create a capsule, the following data is stored **exclusively on your device**:
+When you create a capsule, the following data is stored **on your device and, if iCloud is enabled, synced to your personal iCloud account**:
 
 - Text content you write
 - Photos you select from your library or capture with the camera
@@ -33,9 +33,11 @@ When you create a capsule, the following data is stored **exclusively on your de
 - Capsule titles, creation dates, and unlock dates
 - Your sender name (if you choose to send a capsule to someone)
 
-**This data never leaves your device** unless you explicitly choose to share a capsule with someone using the App's send feature (see Section 2.3).
+If you have iCloud enabled on your device, your capsule data is automatically synced across your Apple devices using Apple's CloudKit framework. This data goes to **your personal iCloud storage** — not to any server I operate. I have no access to your iCloud data. Apple encrypts your data in transit and at rest.
 
-I have no access to any of this data. There are no servers, no cloud storage, no accounts, and no way for me or any third party to view your content.
+If iCloud is disabled, all data remains exclusively on your device.
+
+I have no access to any of this data. There are no servers I operate, no accounts, and no way for me or any third party to view your content.
 
 ### 2.2 Preferences (Stored Locally Only)
 
@@ -106,11 +108,11 @@ The minimal data processing that occurs is based on:
 
 ## 4. Data Storage and Security
 
-All data is stored locally on your device using Apple's standard frameworks:
+All data is stored on your device and, if iCloud is enabled, synced to your personal iCloud account using Apple's standard frameworks:
 
 - **SwiftData** for capsule metadata and content
-- **File system** for voice recordings (stored in the App's sandboxed Documents directory)
-- **UserDefaults** for preferences
+- **Apple CloudKit** for iCloud sync (uses your personal iCloud storage, encrypted by Apple)
+- **UserDefaults** for preferences (not synced)
 
 Data is protected by your device's built-in security features, including:
 
@@ -173,7 +175,7 @@ Since I do not store any of your data on servers or have any way to access it, m
 
 ## 8. International Data Transfers
 
-Your capsule content (text, photos, voice recordings) is never transferred to any server. It remains on your device in the jurisdiction where you use it.
+If iCloud is enabled, your capsule content (text, photos, voice recordings) is synced to Apple's iCloud servers to enable multi-device access. Apple stores this data in data centers across various jurisdictions, subject to Apple's privacy policy. This is your personal iCloud data — I have no access to it. If iCloud is disabled, your data remains exclusively on your device.
 
 When you make an in-app purchase, anonymous transaction data (anonymous user ID, product purchased, transaction ID) is processed by RevenueCat, Inc., which is based in the United States. This transfer is limited to non-personal, anonymous data and is covered by RevenueCat's data processing agreements and standard contractual clauses under GDPR Article 46.
 
@@ -236,7 +238,7 @@ I will respond to privacy-related inquiries within 30 days, as required by GDPR 
 | Do you use analytics? | No |
 | Do you track me? | No |
 | Do you share data with third parties? | Anonymous purchase data only (RevenueCat) |
-| Where is my data stored? | On your device only |
+| Where is my data stored? | On your device and in your personal iCloud (if enabled) |
 | How do I delete my data? | Delete the capsule or delete the App |
 
 ---

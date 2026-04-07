@@ -4,6 +4,7 @@ struct EmptyStateView: View {
     var onIconTap: (() -> Void)? = nil
     @State private var appeared = false
     @State private var pulsing = false
+    @State private var tapTrigger = false
 
     var body: some View {
         VStack(spacing: 20) {
@@ -30,7 +31,8 @@ struct EmptyStateView: View {
                     .scaleEffect(pulsing ? 1.8 : 1.0)
             }
             .contentShape(.circle)
-            .onTapGesture { onIconTap?() }
+            .onTapGesture { tapTrigger.toggle(); onIconTap?() }
+            .sensoryFeedback(.impact(weight: .medium), trigger: tapTrigger)
             .padding(.bottom, 4)
 
             Text("seal a message, photo, or voice note\nfor the future.")

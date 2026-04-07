@@ -105,9 +105,6 @@ struct ArchiveView: View {
             ) {
                 Button("annihilate", role: .destructive) {
                     if let capsule = capsuleToDelete {
-                        if let audioFile = capsule.audioFileName {
-                            AudioManager().deleteAudioFile(named: audioFile)
-                        }
                         NotificationManager.cancelCapsuleNotification(id: capsule.id.uuidString)
                         modelContext.delete(capsule)
                         capsuleToDelete = nil

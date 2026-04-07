@@ -179,6 +179,69 @@ struct SettingsView: View {
                         )
                     }
 
+                    // iCloud sync status
+                    VStack(alignment: .leading, spacing: 14) {
+                        Text("icloud")
+                            .font(.caption)
+                            .foregroundStyle(.primary.opacity(0.5))
+                            .tracking(Design.trackingWide)
+                            .padding(.leading, 4)
+
+                        if FileManager.default.ubiquityIdentityToken != nil {
+                            HStack(spacing: 14) {
+                                Image(systemName: "cloud")
+                                    .font(.body.weight(.light))
+                                    .frame(width: 24)
+                                Text("capsules synced across your devices")
+                                    .font(.body)
+                                    .tracking(Design.trackingNormal)
+                                Spacer()
+                            }
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 18)
+                            .background(Design.surface)
+                            .clipShape(.rect(cornerRadius: Design.radiusMedium))
+                            .overlay {
+                                RoundedRectangle(cornerRadius: Design.radiusMedium)
+                                    .strokeBorder(Design.border, lineWidth: 1)
+                            }
+                        } else {
+                            Button {
+                                if let url = URL(string: UIApplication.openSettingsURLString) {
+                                    UIApplication.shared.open(url)
+                                }
+                            } label: {
+                                HStack(spacing: 14) {
+                                    Image(systemName: "icloud.slash")
+                                        .font(.body.weight(.light))
+                                        .frame(width: 24)
+                                    VStack(alignment: .leading, spacing: 1) {
+                                        Text("icloud is off")
+                                            .font(.body)
+                                            .tracking(Design.trackingNormal)
+                                        Text("capsules won't sync across your devices.")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                            .tracking(Design.trackingTight)
+                                    }
+                                    Spacer()
+                                    Image(systemName: "arrow.up.right")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 18)
+                                .background(Design.surface)
+                                .clipShape(.rect(cornerRadius: Design.radiusMedium))
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: Design.radiusMedium)
+                                        .strokeBorder(Design.border, lineWidth: 1)
+                                }
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+
                     // Pro status
                     VStack(alignment: .leading, spacing: 14) {
                         Text("lacuna +")

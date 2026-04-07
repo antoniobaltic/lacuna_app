@@ -12,7 +12,17 @@ struct LacunaApp: App {
 
     init() {
         do {
-            container = try ModelContainer(for: Capsule.self)
+            let schema = Schema([Capsule.self])
+            let config = ModelConfiguration(
+                "Capsules",
+                schema: schema,
+                cloudKitDatabase: .automatic
+            )
+            container = try ModelContainer(
+                for: schema,
+                migrationPlan: CapsuleMigrationPlan.self,
+                configurations: [config]
+            )
         } catch {
             fatalError("Failed to create ModelContainer: \(error)")
         }

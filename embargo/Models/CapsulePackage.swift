@@ -21,13 +21,8 @@ struct CapsulePackage: Codable {
         self.createdAt = capsule.createdAt
         self.unlocksAt = capsule.unlocksAt
 
-        if let audioFileName = capsule.audioFileName {
-            let audioURL = AudioManager.audioFileURL(for: audioFileName)
-            if let data = try? Data(contentsOf: audioURL) {
-                self.audioData = data.base64EncodedString()
-            } else {
-                self.audioData = nil
-            }
+        if let data = capsule.resolvedAudioData {
+            self.audioData = data.base64EncodedString()
         } else {
             self.audioData = nil
         }

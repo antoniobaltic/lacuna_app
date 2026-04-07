@@ -83,8 +83,8 @@ struct OpenedCapsuleView: View {
                                     playTrigger.toggle()
                                     if audioManager.isPlaying {
                                         audioManager.stopPlayback()
-                                    } else if let fileName = capsule.audioFileName {
-                                        audioManager.play(fileName: fileName)
+                                    } else if let data = capsule.resolvedAudioData {
+                                        audioManager.playFromData(data)
                                     }
                                 }
                                 .labelStyle(.iconOnly)
@@ -186,9 +186,6 @@ struct OpenedCapsuleView: View {
         }
         .confirmationDialog("let it go?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
             Button("annihilate", role: .destructive) {
-                if let audioFile = capsule.audioFileName {
-                    audioManager.deleteAudioFile(named: audioFile)
-                }
                 NotificationManager.cancelCapsuleNotification(id: capsule.id.uuidString)
                 modelContext.delete(capsule)
                 dismiss()
@@ -221,15 +218,17 @@ struct OpenedCapsuleView: View {
         case .photo:
             if let data = capsule.imageData, let image = UIImage(data: data) { items.append(image) }
         case .voice:
-            if let fileName = capsule.audioFileName {
-                let url = URL.documentsDirectory.appending(path: fileName)
-                if FileManager.default.fileExists(atPath: url.path) { items.append(url) }
+            if let data = capsule.resolvedAudioData {
+                let tempURL = FileManager.default.temporaryDirectory.appending(path: "\(UUID().uuidString).m4a")
+                if let _ = try? data.write(to: tempURL) {
+                    items.append(tempURL)
+                }
             }
         }
         guard !items.isEmpty else { return }
         let ac = UIActivityViewController(activityItems: items, applicationActivities: nil)
         if let windowScene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
-           let root = windowScene.windows.first?.rootViewController {
+           let root = windowScene.keyWindow?.rootViewController {
             // Find the topmost presented VC (handles sheets, nav stacks, etc.)
             var topVC = root
             while let presented = topVC.presentedViewController {

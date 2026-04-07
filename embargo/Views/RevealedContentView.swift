@@ -35,7 +35,7 @@ struct RevealedContentView: View {
                             .clipShape(.rect(cornerRadius: Design.radiusLarge))
                     }
                 case .voice:
-                    VoicePlaybackView(fileName: capsule.audioFileName ?? "")
+                    VoicePlaybackView(audioData: capsule.resolvedAudioData)
                 }
             }
 

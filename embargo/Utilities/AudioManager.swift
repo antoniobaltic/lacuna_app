@@ -15,6 +15,7 @@ final class AudioManager: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDelega
     private var recordingTask: Task<Void, Never>?
     private var playbackTask: Task<Void, Never>?
     private var currentFileName: String?
+    private var tempPlaybackURL: URL?  // Track temp files for cleanup
 
     static func audioFileURL(for fileName: String) -> URL {
         URL.documentsDirectory.appending(path: fileName)
@@ -68,6 +69,23 @@ final class AudioManager: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDelega
 
     func play(fileName: String) {
         let url = Self.audioFileURL(for: fileName)
+        playURL(url)
+    }
+
+    /// Play audio from inline Data (used for iCloud-synced capsules)
+    func playFromData(_ data: Data) {
+        // Write to a temp file — AVAudioPlayer needs a URL
+        let tempURL = FileManager.default.temporaryDirectory.appending(path: "\(UUID().uuidString).m4a")
+        do {
+            try data.write(to: tempURL)
+            tempPlaybackURL = tempURL
+            playURL(tempURL)
+        } catch {
+            isPlaying = false
+        }
+    }
+
+    private func playURL(_ url: URL) {
         do {
             let session = AVAudioSession.sharedInstance()
             try session.setCategory(.playback, mode: .default)
@@ -89,12 +107,23 @@ final class AudioManager: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDelega
         }
     }
 
+    /// Load audio data from a file in Documents (used during creation to convert file → Data at seal time)
+    func loadAudioData(for fileName: String) -> Data? {
+        let url = Self.audioFileURL(for: fileName)
+        return try? Data(contentsOf: url)
+    }
+
     func stopPlayback() {
         player?.stop()
         player = nil
         isPlaying = false
         playbackTask?.cancel()
         playbackTask = nil
+        // Clean up temp playback file
+        if let tempURL = tempPlaybackURL {
+            try? FileManager.default.removeItem(at: tempURL)
+            tempPlaybackURL = nil
+        }
         playbackTime = 0
         try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
     }
@@ -115,6 +144,11 @@ final class AudioManager: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDelega
         playbackTask?.cancel()
         playbackTask = nil
         playbackTime = 0
+        // Clean up temp playback file
+        if let tempURL = tempPlaybackURL {
+            try? FileManager.default.removeItem(at: tempURL)
+            tempPlaybackURL = nil
+        }
         try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
     }
 }
